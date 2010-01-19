@@ -1,0 +1,40 @@
+NAME
+    YUI::Menu::Markup - Generate YUI markup menus
+
+DESCRIPTION
+    YUI::Menu::Markup will help you create your YUI menus by using markup
+    (html).
+
+    It offers a very light interface to create your modules from any kind of
+    data, like *perl raw* (hashes) to even YAML.
+
+    There are no plans in giving support for creating YUI menus by
+    javascript data. Even, the html genearated doesn't allow modifications
+    such as changing the CSS class name of the items.
+
+Attributes
+    source_class
+        If you have your own class (or module) for getting the data of the
+        menu please use this attribute. It should be the module name
+        (*Foo::Bar*) and have the module should have a *new()* method.
+
+        If your module doesn't have anything of the above please take a look
+        to source_ref.
+
+    source_ref
+        Similar to source_class but it should be the reference (eg, the
+        object) to the source.
+
+        The class contained in this refernece should have a method named
+        get_source and should return an array of hashes to be used for
+        building the menu.
+
+    data
+        The data that will be used for building the menu, should be an array
+        of hashes where
+
+Methods
+  generate()
+    Builds the HTML and javascript caller for the menu and returns it as a
+    string
+
