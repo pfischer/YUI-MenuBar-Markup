@@ -22,7 +22,6 @@ class name of the items.
 
 =cut
 use Mouse;
-use IO::Scalar;
 
 =head1 Attributes
 
@@ -60,12 +59,57 @@ has 'source_ref' => (
 The data that will be used for building the menu, should be an array of hashes
 where
 
-=back 
-
 =cut
 has 'data' => (
         is => 'rw',
         isa => 'ArrayRef');
+
+=item B<top_id>
+
+The menubar is made of lists (ul, li) and all these lists are contained in a
+div element. By default the div element ID is automatically generated (with a
+random number). In case you want to use a different ID just set the value of
+this attribute to I<that>.
+
+=cut
+has 'top_id' => (
+        is => 'rw',
+        isa => 'Str');
+
+=item B<autosubmenu>
+
+When the cursor is over a menu that has a submenu, then the submenu will be
+displayed automatically without clicking on it.
+
+This is turned on by default.
+
+=cut
+has 'autosubmenu' => (
+        is => 'rw',
+        isa => 'Bool');
+
+=item B<delay>
+
+Indicates the time (milliseconds) that should expire before a menu is hidden.
+
+In YUI this is known as the I<hidedelay>.
+=cut
+has 'delay' => (
+        is => 'rw',
+        isa => 'Int');
+
+=item B<lazy>
+
+Modifies the lazyload parameter of the YUI menubar to improve the performance
+of the menubar by deferring the initialization and rendering of submenus until
+the first time they are made visible.
+
+=back
+
+=cut
+has 'lazy' => (
+        is => 'rw',
+        isa => 'Bool');
 
 =head1 Methods
 
@@ -91,8 +135,13 @@ sub generate {
     }
 
     if ($self->{'data'}) {
-        my $html;
-        $html .= "<div id=\"" . $self->_get_id() . "\" class=\"yuimenubar yuimenubarnav\">\n";
+        # The YUI loader
+        my $html = '';
+        my $menu_id = $self->_get_id();
+        $html .= "<script type=\"text/javascript\">\n";
+        $html .= $self->_generate_javascript($menu_id);
+        $html .= "</script>\n";
+        $html .= "<div id=\"" . $menu_id . "\" class=\"yuimenubar yuimenubarnav\">\n";
         $html .=  "<div class=\"bd\">\n";
         $html .= $self->_generate_child_menu(
                 $self->{'data'},
@@ -153,6 +202,24 @@ sub _generate_child_menu {
     return $html;
 }
 
+# Generates the javascript section
+sub _generate_javascript {
+    my ($self, $id) = @_;
+    
+    my $autosubmenu = ($self->{'autosubmenu'}) ? 'true' : 'false';
+    my $lazy = ($self->{'lazy'}) ? 'true' : 'false';
+    my $js_menu = <<JS;
+        YAHOO.util.Event.onContentReady("$id", function () {
+        var oMenuBar = new YAHOO.widget.MenuBar("$id", { 
+                                                autosubmenudisplay: $autosubmenu,
+                                                hidedelay: $self->{'delay'}, 
+                                                lazyload: $lazy });
+        oMenuBar.render();
+    });
+JS
+    return $js;
+}
+
 # Generates a random ID
 sub _generate_random_id {
     my ($self) = @_;
@@ -169,7 +236,6 @@ sub _get_id {
         return $self->{'top_id'};
     }
     return $self->_generate_random_id();
-
 }
 
 1;
