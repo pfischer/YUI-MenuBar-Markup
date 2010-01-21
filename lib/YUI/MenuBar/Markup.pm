@@ -1,17 +1,17 @@
 #
-# YUI::Menu::Markup
+# YUI::MenuBar::Markup
 #
 # Author(s): Pablo Fischer (pfischer@cpan.org)
 # Created: 01/19/2010 10:05:38 PST 10:05:38
-package YUI::Menu::Markup;
+package YUI::MenuBar::Markup;
 
 =head1 NAME
 
-YUI::Menu::Markup - Generate YUI markup menus
+YUI::MenuBar::Markup - Generate YUI markup menus
 
 =head1 DESCRIPTION
 
-YUI::Menu::Markup will help you create your YUI menus by using markup (html).
+YUI::MenuBar::Markup will help you create your YUI menus by using markup (html).
 
 It offers a very light interface to create your modules from any kind of data,
 like I<perl raw> (hashes) to even L<YAML>.
@@ -20,8 +20,27 @@ There are no plans in giving support for creating YUI menus by javascript data.
 Even, the html genearated doesn't allow modifications such as changing the CSS
 class name of the items.
 
+Please note that the string returned by L<generated()> is the pure javascript
+to start the menubar and the HTML of the menubar. It's your B<responsibility>
+to include the CSS and JS files. You can use L<YUI::Loader> for this.
+
+=head1 SYNOPSYS
+
+    use strict;
+    use warnings;
+    use YUI::MenuBar::Markup;
+    use YUI::MenuBar::Markup::YAML;
+
+    my $markup_yaml = YUI::MenuBar::Markup::YAML->new(
+            filename => 'examples/menu_yaml.yaml');
+    my $markup = YUI::MenuBar::Markup->new(
+            source_ref => $markup_yaml);
+    print $markup->generate();
+
 =cut
 use Mouse;
+
+our $VERSION = '0.01';
 
 =head1 Attributes
 
@@ -86,7 +105,8 @@ This is turned on by default.
 =cut
 has 'autosubmenu' => (
         is => 'rw',
-        isa => 'Bool');
+        isa => 'Bool',
+        default => 1);
 
 =item B<delay>
 
@@ -96,7 +116,8 @@ In YUI this is known as the I<hidedelay>.
 =cut
 has 'delay' => (
         is => 'rw',
-        isa => 'Int');
+        isa => 'Int',
+        default => 750);
 
 =item B<lazy>
 
@@ -109,7 +130,8 @@ the first time they are made visible.
 =cut
 has 'lazy' => (
         is => 'rw',
-        isa => 'Bool');
+        isa => 'Bool',
+        default => 1);
 
 =head1 Methods
 
@@ -217,7 +239,7 @@ sub _generate_javascript {
         oMenuBar.render();
     });
 JS
-    return $js;
+    return $js_menu;
 }
 
 # Generates a random ID
@@ -237,6 +259,29 @@ sub _get_id {
     }
     return $self->_generate_random_id();
 }
+
+=head1 SEE ALSO
+
+=over 4
+
+=item * YUI Menu documentation: http://developer.yahoo.com/yui/menu
+
+=item * L<YUI::Loader>
+
+=back
+
+=head1 AUTHOR
+ 
+Pablo Fischer (pablo@pablo.com.mx).
+
+=head1 COPYRIGHT
+ 
+Copyright (C) 2010 by Pablo Fischer.
+ 
+This library is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.
+
+=cut
 
 1;
 

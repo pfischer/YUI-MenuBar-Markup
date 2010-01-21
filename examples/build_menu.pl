@@ -7,13 +7,13 @@
 
 use strict;
 use warnings;
-use YUI::Menu::Markup;
-use YUI::Menu::Markup::YAML;
+use YUI::MenuBar::Markup;
+use YUI::MenuBar::Markup::YAML;
 use Data::Dumper;
 
-my $markup_yaml = YUI::Menu::Markup::YAML->new(
+my $markup_yaml = YUI::MenuBar::Markup::YAML->new(
         filename => 'examples/menu_yaml.yaml');
-my $markup = YUI::Menu::Markup->new(
+my $markup = YUI::MenuBar::Markup->new(
         source_ref => $markup_yaml);
 print $markup->generate();
 

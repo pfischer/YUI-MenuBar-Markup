@@ -1,18 +1,18 @@
 #
-# YUI::Menu::Markup::YAML
+# YUI::MenuBar::Markup::YAML
 #
 # Author(s): Pablo Fischer (pfischer@cpan.org)
 # Created: 01/19/2010 10:32:05 PST 10:32:05
-package YUI::Menu::Markup::YAML;
+package YUI::MenuBar::Markup::YAML;
 
 =head1 NAME
 
-YUI::Menu::Markup::YAML - Provides the menu content from a YAML file
+YUI::MenuBar::Markup::YAML - Provides the menu content from a YAML file
 
 =head1 DESCRIPTION
 
 It reads a L<YAML> file, gets the content and returns it so that
-L<YUI::Menu::Markup> can use it for building YUI menu.
+L<YUI::MenuBar::Markup> can use it for building YUI menu.
 
 It uses L<YAML::Syck> for reading the YAML file.
 
@@ -61,6 +61,8 @@ Valid items or any menu item are:
 use Mouse;
 use YAML::Syck;
 
+our $VERSION = '0.01';
+
 =head1 Attributes
 
 =over 4
@@ -84,7 +86,7 @@ has 'filename' => (
 Opens the YAML file (see L<filename>) and looks for the first I<menu> item,
 once its found then all of its items are returned.
 
-The method is called by L<YUI::Menu::Markup>.
+The method is called by L<YUI::MenuBar::Markup>.
 
 =cut
 sub get_data {
@@ -102,6 +104,19 @@ sub get_data {
     warn "No *menu* item found in $self->{'filename'}, returning undef";
     return undef;
 }
+
+=head1 AUTHOR
+ 
+Pablo Fischer (pablo@pablo.com.mx).
+
+=head1 COPYRIGHT
+ 
+Copyright (C) 2010 by Pablo Fischer.
+ 
+This library is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.
+
+=cut
 
 1;
 
