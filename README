@@ -66,8 +66,7 @@ Attributes
         Indicates the time (milliseconds) that should expire before a menu
         is hidden.
 
-        In YUI this is known as the *hidedelay*. =cut has 'delay' => ( is =>
-        'rw', isa => 'Int', default => 750);
+        In YUI this is known as the *hidedelay*.
 
     lazy
         Modifies the lazyload parameter of the YUI menubar to improve the

@@ -113,6 +113,7 @@ has 'autosubmenu' => (
 Indicates the time (milliseconds) that should expire before a menu is hidden.
 
 In YUI this is known as the I<hidedelay>.
+
 =cut
 has 'delay' => (
         is => 'rw',
