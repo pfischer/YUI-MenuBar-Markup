@@ -40,7 +40,7 @@ to include the CSS and JS files. You can use L<YUI::Loader> for this.
 =cut
 use Mouse;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =head1 Attributes
 
@@ -193,6 +193,8 @@ sub _generate_child_menu {
             if ($is_first) {
                 if ($extra_class) {
                     $extra_class = "$extra_class first-of-type";
+                } else {
+                    $extra_class = "first-of-type";
                 }
                 $is_first = 0;
             }
@@ -200,8 +202,16 @@ sub _generate_child_menu {
             if (defined $item->{'link'}) {
                 $link = $item->{'link'};
             }
-            $html .=  "$tab<li class=\"yuimenubaritem $extra_class\">";
-            $html .=  "<a class=\"yuimenubaritemlabel\" href=\"$link\">";
+            my $menuitemclass = 'menubaritem';
+            if ($level gt 1) {
+                $menuitemclass = 'menuitem';
+            }
+            if ($extra_class) {
+                $html .=  "$tab<li class=\"$menuitemclass $extra_class\">";
+            } else {
+                $html .=  "$tab<li class=\"$menuitemclass\">";
+            }
+            $html .=  "<a class=\"" . $menuitemclass . "label\" href=\"$link\">";
             $html .=  $item->{'name'} . "</a>";
             if (defined $item->{'menu'}) {
                 $html .= "\n";
@@ -255,9 +265,10 @@ sub _generate_random_id {
 sub _get_id {
     my ($self) = @_;
 
-    if (defined $self->{'top_id'}) {
+    if ($self->{'top_id'}) {
         return $self->{'top_id'};
     }
+
     return $self->_generate_random_id();
 }
 
